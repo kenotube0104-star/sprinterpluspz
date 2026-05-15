@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart — SprinterPlus</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>body{font-family:Inter,system-ui,-apple-system,sans-serif}</style>
+</head>
+<body class="bg-white text-zinc-900">
+  <!-- Header (same as index) -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-zinc-100">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-[72px] gap-4">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-2 shrink-0">
+          <div class="w-9 h-9 bg-zinc-900 rounded-xl grid place-items-center">
+            <i data-lucide="truck" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-[22px] font-extrabold tracking-tight">SPRINTER<span class="text-sky-500">PLUS</span></span>
+        </a>
+
+        <!-- Nav Desktop -->
+        <nav class="hidden lg:flex items-center gap-8 text-[14px] font-medium">
+          <a href="index.html#home" class="nav-link hover:text-zinc-900 text-zinc-600 transition pb-1 border-b-2 border-transparent">HOME</a>
+          <a href="index.html#products" class="nav-link hover:text-zinc-900 text-zinc-600 transition pb-1 border-b-2 border-transparent">PRODUCTS</a>
+          <a href="index.html#brands" class="nav-link hover:text-zinc-900 text-zinc-600 transition pb-1 border-b-2 border-transparent">BRANDS</a>
+          <a href="index.html#about" class="nav-link hover:text-zinc-900 text-zinc-600 transition pb-1 border-b-2 border-transparent">ABOUT</a>
+          <a href="index.html#contact" class="nav-link hover:text-zinc-900 text-zinc-600 transition pb-1 border-b-2 border-transparent">CONTACT</a>
+        </nav>
+
+        <!-- Right -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="hidden md:flex items-center relative">
+            <input id="global-search" type="text" placeholder="Search part, SKU..." class="w-[220px] xl:w-[280px] h-10 pl-9 pr-3 rounded-full bg-zinc-50 border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:bg-white transition">
+            <i data-lucide="search" class="w-4 h-4 text-zinc-400 absolute left-3 pointer-events-none"></i>
+          </div>
+          <button id="wishlist-btn" class="relative w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-50 transition">
+            <i data-lucide="heart" class="w-5 h-5 text-zinc-700"></i>
+          </button>
+          <button id="cart-btn" class="relative w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-50 transition">
+            <i data-lucide="shopping-cart" class="w-5 h-5 text-zinc-700"></i>
+            <span id="cart-count" class="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 grid place-items-center bg-sky-500 text-white text-[11px] font-semibold rounded-full scale-0 transition">0</span>
+          </button>
+          <button id="mobile-menu-btn" class="lg:hidden w-10 h-10 grid place-items-center rounded-full hover:bg-zinc-50">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-[1000px] mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">Your Cart</h1>
+    <div id="cart-empty" class="text-zinc-600 py-12 text-center hidden">
+      Your cart is empty. <a href="index.html" class="text-sky-600">Shop products</a>
+    </div>
+
+    <div id="cart-list" class="space-y-4"></div>
+
+    <div id="cart-summary" class="mt-8 bg-zinc-50 border border-zinc-100 rounded-2xl p-6 hidden">
+      <div class="flex items-center justify-between mb-4"><div class="text-zinc-600">Subtotal</div><div id="subtotal">€0.00</div></div>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="checkout-btn" class="h-12 px-6 bg-sky-500 text-white rounded-xl">Finish purchase</button>
+        <button id="clear-btn" class="h-12 px-6 border rounded-xl">Clear cart</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="hidden fixed inset-0 bg-black/40 z-50 grid place-items-center px-4">
+    <div class="bg-white rounded-2xl w-full max-w-lg p-6">
+      <h2 class="text-lg font-semibold mb-3">Complete your order</h2>
+      <div class="space-y-3">
+        <div>
+          <label class="text-sm text-zinc-600">Name</label>
+          <input id="cust-name" class="w-full mt-1 p-3 border rounded-lg" placeholder="Full name">
+        </div>
+        <div>
+          <label class="text-sm text-zinc-600">Email</label>
+          <input id="cust-email" class="w-full mt-1 p-3 border rounded-lg" placeholder="you@example.com">
+        </div>
+        <div>
+          <label class="text-sm text-zinc-600">Address</label>
+          <input id="cust-address" class="w-full mt-1 p-3 border rounded-lg" placeholder="Shipping address">
+        </div>
+        <div>
+          <label class="text-sm text-zinc-600">Phone (optional)</label>
+          <input id="cust-phone" class="w-full mt-1 p-3 border rounded-lg" placeholder="Phone number">
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-3">
+        <button id="checkout-confirm" class="h-11 px-4 bg-sky-500 text-white rounded-lg">Confirm order</button>
+        <button id="checkout-cancel" class="h-11 px-4 border rounded-lg">Cancel</button>
+        <a href="admin.html" target="_blank" class="ml-auto text-sm text-zinc-500 underline">Admin view</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getCart(){return JSON.parse(localStorage.getItem('cart')||'[]')}
+    function saveCart(c){localStorage.setItem('cart',JSON.stringify(c))}
+    function updateHeaderCount(){const el=document.getElementById('cart-count'); if(!el) return; const count=getCart().reduce((s,i)=>s+(i.qty||0),0); el.textContent=count}
+
+    // Auth helpers (header)
+    function getAuth(){return JSON.parse(localStorage.getItem('auth')||'null');}
+    function clearAuth(){localStorage.removeItem('auth');}
+    function updateAuthUI(){ const acc=document.getElementById('account-btn'); const logout=document.getElementById('logout-btn'); if(!acc||!logout) return; const a=getAuth(); if(a){acc.textContent='Hi, '+(a.name||a.email); logout.classList.remove('hidden')} else {acc.textContent='Login'; logout.classList.add('hidden')} }
+    document.addEventListener('DOMContentLoaded', ()=>{ const acc=document.getElementById('account-btn'); const logout=document.getElementById('logout-btn'); if(acc) acc.addEventListener('click', ()=>{ if(getAuth()) { alert('Logged in as '+getAuth().email) } else { window.location.href='login.html?redirect=cart.html' } }); if(logout) logout.addEventListener('click', ()=>{ clearAuth(); updateAuthUI(); alert('Logged out'); }); updateAuthUI(); });
+
+    function render(){const cart=getCart(); const list=document.getElementById('cart-list'); const empty=document.getElementById('cart-empty'); const summary=document.getElementById('cart-summary'); list.innerHTML=''; if(!cart.length){empty.classList.remove('hidden'); summary.classList.add('hidden'); updateHeaderCount(); return;} empty.classList.add('hidden'); summary.classList.remove('hidden');
+      cart.forEach(item=>{
+        const row=document.createElement('div'); row.className='flex items-center gap-4 bg-white border border-zinc-100 rounded-2xl p-3';
+        row.innerHTML = `
+          <img src="${item.img||''}" class="w-20 h-20 object-cover rounded-lg" alt="">
+          <div class="flex-1">
+            <div class="font-semibold">${item.name}</div>
+            <div class="text-zinc-500">€${(item.price||0).toFixed(2)}</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="qty-dec h-8 w-8 rounded border">-</button>
+            <div class="w-8 text-center">${item.qty}</div>
+            <button class="qty-inc h-8 w-8 rounded border">+</button>
+          </div>
+          <div class="w-24 text-right">€${((item.price||0)*item.qty).toFixed(2)}</div>
+          <button class="remove text-zinc-500 ml-3">Remove</button>
+        `;
+        list.appendChild(row);
+        row.querySelector('.qty-inc').addEventListener('click', ()=>{ item.qty++; saveCart(cart); render(); });
+        row.querySelector('.qty-dec').addEventListener('click', ()=>{ if(item.qty>1) item.qty--; else { const idx=cart.findIndex(x=>x.id===item.id); if(idx>-1) cart.splice(idx,1); } saveCart(cart); render(); });
+        row.querySelector('.remove').addEventListener('click', ()=>{ const idx=cart.findIndex(x=>x.id===item.id); if(idx>-1) cart.splice(idx,1); saveCart(cart); render(); });
+      });
+      const subtotal = cart.reduce((s,i)=>s + (i.price||0)*(i.qty||0),0); document.getElementById('subtotal').textContent = '€'+subtotal.toFixed(2);
+      updateHeaderCount();
+    }
+
+    // header logo links back to index.html; no separate back-btn needed
+    document.getElementById('clear-btn').addEventListener('click', ()=>{ if(confirm('Clear cart?')){ localStorage.removeItem('cart'); render(); } });
+    // Checkout opens modal
+    document.getElementById('checkout-btn').addEventListener('click', ()=>{
+      const cart = getCart(); if(!cart.length){ alert('Cart is empty'); return; }
+      document.getElementById('checkout-modal').classList.remove('hidden');
+    });
+
+    // Modal actions
+    document.getElementById('checkout-cancel').addEventListener('click', ()=>{
+      document.getElementById('checkout-modal').classList.add('hidden');
+    });
+
+    document.getElementById('checkout-confirm').addEventListener('click', ()=>{
+      const name = document.getElementById('cust-name').value.trim();
+      const email = document.getElementById('cust-email').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      if(!name || !email){ alert('Please provide name and email'); return; }
+      const cart = getCart(); if(!cart.length){ alert('Cart empty'); document.getElementById('checkout-modal').classList.add('hidden'); return; }
+      const subtotal = cart.reduce((s,i)=>s + (i.price||0)*(i.qty||0),0);
+      // Loyalty calculation based on previous orders for this email
+      const orders = JSON.parse(localStorage.getItem('orders')||'[]');
+      const prev = orders.filter(o=>o.email===email);
+      const prevCount = prev.length;
+      const prevTotal = prev.reduce((s,o)=>s + (o.totalAfterDiscount !== undefined ? o.totalAfterDiscount : (o.subtotal||0)), 0);
+      // base discount rules
+      let discount = 0;
+      if(subtotal > 100) discount = Math.max(discount, 5);
+      const cumulativeAfter = prevTotal + subtotal;
+      if(cumulativeAfter >= 500) discount = Math.max(discount, 10);
+      if(cumulativeAfter >= 2000) discount = Math.max(discount, 15);
+      // repeat-customer bonus
+      if(prevCount >= 5) discount += 2;
+      if(discount > 30) discount = 30;
+      const totalAfter = +(subtotal * (1 - discount/100)).toFixed(2);
+      // determine tier
+      let tier = 'Bronze';
+      if(cumulativeAfter >= 2000) tier = 'Emerald';
+      else if(cumulativeAfter >= 500) tier = 'Gold';
+      else if(cumulativeAfter >= 100) tier = 'Silver';
+
+      const initials = (name||'').split(' ').map(s=>s[0]).join('').slice(0,2).toUpperCase();
+
+      const order = { id: Date.now(), items: cart, name, email, address, phone, subtotal, discountPercent: discount, totalAfterDiscount: totalAfter, customerTier: tier, customerPrevOrders: prevCount, created: new Date().toISOString(), status: 'new', avatarInitials: initials };
+      orders.push(order); localStorage.setItem('orders', JSON.stringify(orders));
+      // clear cart
+      localStorage.removeItem('cart'); render(); document.getElementById('checkout-modal').classList.add('hidden');
+      alert('Thank you '+name+"! Your order has been placed. Discount: "+discount+"% — Final: €"+totalAfter);
+    });
+
+    render(); if(window.lucide) lucide.replace();
+  </script>
+</body>
+</html>
